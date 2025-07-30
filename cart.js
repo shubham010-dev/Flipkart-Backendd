@@ -84,7 +84,17 @@ module.exports = router;
 
 // Delete route-assignment
 
-// router.delete("/cart/:id",async(req,res)=>{
-//     //check if items is there in the cart,-do the delete operation.
-//     //if item is not there-err to user
-// })
+ router.delete("/cart/:id",async(req,res)=>{
+     try {
+  const itemId = req.params.id;
+  const deletedItem = await Cart.findByIdAndDelete(itemId);
+
+  if (!deletedItem) {
+    return res.status(404).json({ message: "Item not found in cart" });
+  }
+
+  res.status(200).json({ message: "Item deleted successfully", item: deletedItem });
+} catch (error) {
+  res.status(500).json({ message: "Server error", error });
+}
+ })
